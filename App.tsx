@@ -26,14 +26,14 @@ function App() {
   const startGame = () => setGameState('playing');
   const goToMenu = () => setGameState('menu');
 
-  // Helper for dynamic title coloring
-  const getThemeColor = () => {
+  // Helper for dynamic theme colors
+  const getThemeColorHex = () => {
     switch(difficulty) {
-      case 'EASY': return 'text-blue-500';
-      case 'NORMAL': return 'text-blue-600';
-      case 'HARD': return 'text-purple-600';
-      case 'IMPOSSIBLE': return 'text-red-600';
-      default: return 'text-blue-600';
+      case 'EASY': return '#3b82f6'; // Blue
+      case 'NORMAL': return '#3b82f6'; // Blue
+      case 'HARD': return '#9333ea'; // Purple
+      case 'IMPOSSIBLE': return '#ef4444'; // Red
+      default: return '#3b82f6';
     }
   };
 
@@ -47,10 +47,37 @@ function App() {
     }
   };
 
+  const getDifficultyBtnStyle = (level: DifficultyLevel) => {
+    const isSelected = difficulty === level;
+    if (!isSelected) return {};
+    
+    let borderColor = '#3b82f6';
+    let bgColor = '#eff6ff';
+
+    if (level === 'HARD') {
+      borderColor = '#9333ea';
+      bgColor = '#faf5ff';
+    } else if (level === 'IMPOSSIBLE') {
+      borderColor = '#ef4444';
+      bgColor = '#fef2f2';
+    }
+
+    return {
+      borderColor: borderColor,
+      backgroundColor: bgColor
+    };
+  };
+
+  const getStartBtnStyle = () => {
+    if (difficulty === 'IMPOSSIBLE') return { backgroundColor: '#ef4444' };
+    if (difficulty === 'HARD') return { backgroundColor: '#9333ea' };
+    return { backgroundColor: '#0f172a' };
+  };
+
   return (
-    <div className="relative w-full h-screen overflow-hidden font-sans text-slate-800">
+    <div className="full-screen" style={{ fontFamily: 'sans-serif' }}>
       {/* Game Layer */}
-      <div className="absolute inset-0 z-0">
+      <div className="full-screen z-0">
         <GameEngine 
           gameState={gameState} 
           difficulty={difficulty}
@@ -59,62 +86,55 @@ function App() {
         />
       </div>
 
-      {/* HUD (Head-up Display) - Only visible when playing */}
+      {/* HUD (Head-up Display) */}
       {gameState === 'playing' && (
-        <div className="absolute top-0 left-0 w-full p-4 z-10 pointer-events-none flex justify-between items-start">
-          <div className="bg-white/80 backdrop-blur-sm p-3 rounded-lg shadow-lg border-l-4 border-blue-500">
-            <div className="text-xs uppercase tracking-wider text-slate-500 font-bold mb-1">Mission Score</div>
-            <div className="text-3xl font-black text-slate-800 tabular-nums leading-none">
+        <div className="hud-container z-10 pointer-events-none">
+          <div className="hud-panel">
+            <span className="text-label">Mission Score</span>
+            <div className="text-score">
               {score.toLocaleString()}
             </div>
           </div>
-          <div className="bg-white/80 backdrop-blur-sm px-3 py-2 rounded-lg shadow-sm">
-             <span className="text-xs font-bold text-slate-500 tracking-widest">{DIFFICULTIES[difficulty].label}</span>
+          <div className="hud-badge">
+             <span className="text-label" style={{ marginBottom: 0 }}>{DIFFICULTIES[difficulty].label}</span>
           </div>
         </div>
       )}
 
       {/* Menu Screen */}
       {gameState === 'menu' && (
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/95 backdrop-blur-sm animate-fade-in transition-colors duration-500">
-          <div className="max-w-md w-full px-6 flex flex-col items-center">
-            <div className="mb-2 p-3 bg-slate-100 rounded-full">
-              <Target className={`w-8 h-8 ${getThemeColor()}`} />
+        <div className="full-screen z-20 menu-overlay">
+          <div className="menu-content">
+            <div className="icon-circle">
+              <Target size={32} color={getThemeColorHex()} />
             </div>
-            <h1 className={`text-4xl font-black mb-2 tracking-tight text-center transition-colors duration-300 ${getThemeColor()}`}>
+            <h1 className="title-text" style={{ color: getThemeColorHex() }}>
               NEON TACTICAL
             </h1>
-            <p className="text-slate-500 mb-8 tracking-widest text-sm font-medium uppercase transition-all duration-300">
+            <p className="subtitle-text">
               {getSubTitleText()}
             </p>
 
             {/* Difficulty Select */}
-            <div className="w-full mb-8 space-y-3">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 text-center">Select Difficulty</p>
+            <div className="difficulty-list">
+              <p className="text-label" style={{ textAlign: 'center', color: '#94a3b8' }}>Select Difficulty</p>
               {(Object.keys(DIFFICULTIES) as DifficultyLevel[]).map((level) => (
                 <button
                   key={level}
                   onClick={() => setDifficulty(level)}
-                  className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all duration-200 ${
-                    difficulty === level 
-                      ? 'border-current bg-opacity-10 shadow-md transform scale-102' 
-                      : 'border-slate-200 bg-white hover:border-slate-300'
-                  }`}
-                  style={{
-                    borderColor: difficulty === level ? (level === 'IMPOSSIBLE' ? '#ef4444' : level === 'HARD' ? '#9333ea' : '#3b82f6') : '',
-                    backgroundColor: difficulty === level ? (level === 'IMPOSSIBLE' ? '#fef2f2' : level === 'HARD' ? '#faf5ff' : '#eff6ff') : ''
-                  }}
+                  className={`difficulty-btn ${difficulty === level ? 'selected' : ''}`}
+                  style={getDifficultyBtnStyle(level)}
                 >
-                  <div className="flex items-center space-x-3">
-                    {level === 'EASY' && <Shield className={`w-5 h-5 ${difficulty === level ? 'text-blue-600' : 'text-slate-400'}`} />}
-                    {level === 'NORMAL' && <Target className={`w-5 h-5 ${difficulty === level ? 'text-blue-600' : 'text-slate-400'}`} />}
-                    {level === 'HARD' && <Zap className={`w-5 h-5 ${difficulty === level ? 'text-purple-600' : 'text-slate-400'}`} />}
-                    {level === 'IMPOSSIBLE' && <Skull className={`w-5 h-5 ${difficulty === level ? 'text-red-600' : 'text-slate-400'}`} />}
-                    <div className="text-left">
-                      <div className={`font-bold text-sm ${difficulty === level ? 'text-slate-900' : 'text-slate-600'}`}>
+                  <div className="diff-content">
+                    {level === 'EASY' && <Shield size={20} color={difficulty === level ? '#3b82f6' : '#94a3b8'} />}
+                    {level === 'NORMAL' && <Target size={20} color={difficulty === level ? '#3b82f6' : '#94a3b8'} />}
+                    {level === 'HARD' && <Zap size={20} color={difficulty === level ? '#9333ea' : '#94a3b8'} />}
+                    {level === 'IMPOSSIBLE' && <Skull size={20} color={difficulty === level ? '#ef4444' : '#94a3b8'} />}
+                    <div className="diff-text-group">
+                      <div className="diff-name">
                         {DIFFICULTIES[level].label}
                       </div>
-                      <div className="text-xs text-slate-400 font-medium">
+                      <div className="diff-desc">
                         {level === 'EASY' && 'Recruit'}
                         {level === 'NORMAL' && 'Veteran'}
                         {level === 'HARD' && 'Elite'}
@@ -122,26 +142,23 @@ function App() {
                       </div>
                     </div>
                   </div>
-                  {difficulty === level && <ChevronRight className={`w-5 h-5 ${getThemeColor()}`} />}
+                  {difficulty === level && <ChevronRight size={20} color={getThemeColorHex()} />}
                 </button>
               ))}
             </div>
 
             <button
               onClick={startGame}
-              className={`group relative w-full py-4 text-white rounded-full font-bold text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-200 flex items-center justify-center space-x-2 ${
-                difficulty === 'IMPOSSIBLE' ? 'bg-red-600 hover:bg-red-700' : 
-                difficulty === 'HARD' ? 'bg-purple-600 hover:bg-purple-700' : 
-                'bg-slate-900 hover:bg-slate-800'
-              }`}
+              className="btn-primary"
+              style={getStartBtnStyle()}
             >
               <span>ENGAGE</span>
-              <Play className="w-5 h-5 fill-current" />
+              <Play size={20} fill="currentColor" />
             </button>
             
             {highScore > 0 && (
-              <div className="mt-6 text-sm font-medium text-slate-400">
-                HIGH SCORE: <span className="text-slate-800">{highScore.toLocaleString()}</span>
+              <div style={{ marginTop: '1.5rem', fontSize: '0.875rem', fontWeight: 500, color: '#94a3b8' }}>
+                HIGH SCORE: <span style={{ color: '#1e293b' }}>{highScore.toLocaleString()}</span>
               </div>
             )}
           </div>
@@ -150,37 +167,37 @@ function App() {
 
       {/* Game Over Screen */}
       {gameState === 'gameover' && (
-        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-white/90 backdrop-blur-md animate-fade-in">
-          <div className="text-center">
-            <h2 className="text-5xl font-black text-red-500 mb-2 tracking-tighter">MIA</h2>
-            <p className="text-slate-500 text-lg font-medium tracking-widest uppercase mb-8">Mission Failed</p>
+        <div className="full-screen z-30 menu-overlay">
+          <div className="menu-content">
+            <h2 className="gameover-title">MIA</h2>
+            <p className="subtitle-text" style={{ marginBottom: '2rem' }}>Mission Failed</p>
             
-            <div className="bg-white p-6 rounded-2xl shadow-xl border border-slate-100 mb-8 min-w-[280px]">
-              <div className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Final Score</div>
-              <div className="text-4xl font-black text-slate-800 tabular-nums">
+            <div className="gameover-card">
+              <div className="text-label">Final Score</div>
+              <div className="text-score" style={{ fontSize: '2.5rem' }}>
                 {score.toLocaleString()}
               </div>
               
-              <div className="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center">
-                 <span className="text-xs text-slate-400 font-bold uppercase">Best</span>
-                 <span className="text-lg font-bold text-slate-600">{Math.max(score, highScore).toLocaleString()}</span>
+              <div className="score-row">
+                 <span className="text-label" style={{ marginBottom: 0 }}>Best</span>
+                 <span style={{ fontSize: '1.125rem', fontWeight: 700, color: '#475569' }}>{Math.max(score, highScore).toLocaleString()}</span>
               </div>
             </div>
 
-            <div className="flex flex-col space-y-3">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
               <button
                 onClick={startGame}
-                className="px-8 py-4 bg-slate-900 text-white rounded-full font-bold text-lg shadow-lg hover:bg-slate-800 hover:scale-105 transition-all flex items-center justify-center space-x-2"
+                className="btn-primary"
               >
-                <RotateCcw className="w-5 h-5" />
+                <RotateCcw size={20} />
                 <span>RETRY MISSION</span>
               </button>
               
               <button
                 onClick={goToMenu}
-                className="px-8 py-3 text-slate-500 font-bold hover:text-slate-800 transition-colors flex items-center justify-center space-x-2"
+                className="btn-secondary"
               >
-                <MenuIcon className="w-4 h-4" />
+                <MenuIcon size={16} />
                 <span>RETURN TO BASE</span>
               </button>
             </div>

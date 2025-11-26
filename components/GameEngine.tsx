@@ -214,7 +214,7 @@ const GameEngine: React.FC<GameEngineProps> = ({ gameState, difficulty, onGameOv
                     hp = 6;
                     color = COLORS.enemyCircle;
                     speed = canvas.height / 250;
-                    scoreVal = 150; // Updated from 100
+                    scoreVal = 200; // Updated from 150
                     break;
             }
 
@@ -438,7 +438,7 @@ const GameEngine: React.FC<GameEngineProps> = ({ gameState, difficulty, onGameOv
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState]);
 
-  return <canvas ref={canvasRef} className="block w-full h-full bg-white" />;
+  return <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%', background: '#fff' }} />;
 };
 
 interface GameObject { x: number, y: number }
