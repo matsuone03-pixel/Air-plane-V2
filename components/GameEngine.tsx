@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { Bullet, Enemy, Particle, Player, DifficultyLevel } from '../types';
 import { DIFFICULTIES, COLORS, PLAYER_SIZE, PLAYER_HIT_SIZE } from '../constants';
@@ -12,7 +11,7 @@ interface GameEngineProps {
 
 const GameEngine: React.FC<GameEngineProps> = ({ gameState, difficulty, onGameOver, onScoreUpdate }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const requestRef = useRef<number>();
+  const requestRef = useRef<number>(0);
   
   // Game State Refs (Mutable to avoid re-renders)
   const scoreRef = useRef(0);
