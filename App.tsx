@@ -1,9 +1,43 @@
 import React, { useState, useCallback } from 'react';
 import GameEngine from './components/GameEngine';
 import { DifficultyLevel, GameState } from './types';
-import { Shield, Target, Zap, Play, RotateCcw, Menu as MenuIcon, ChevronRight, Skull } from 'lucide-react';
 import { DIFFICULTIES } from './constants';
 
+// --- Inline SVG Icons (Replacing lucide-react for stability) ---
+const IconWrapper: React.FC<{ children: React.ReactNode, size?: number, color?: string }> = ({ children, size = 24, color = 'currentColor' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    {children}
+  </svg>
+);
+
+const Shield = ({ size, color }: { size?: number, color?: string }) => (
+  <IconWrapper size={size} color={color}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></IconWrapper>
+);
+const Target = ({ size, color }: { size?: number, color?: string }) => (
+  <IconWrapper size={size} color={color}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></IconWrapper>
+);
+const Zap = ({ size, color }: { size?: number, color?: string }) => (
+  <IconWrapper size={size} color={color}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></IconWrapper>
+);
+const Play = ({ size, fill }: { size?: number, fill?: string }) => (
+  <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill={fill || "none"} stroke={fill ? "none" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="5 3 19 12 5 21 5 3"/>
+  </svg>
+);
+const RotateCcw = ({ size }: { size?: number }) => (
+  <IconWrapper size={size}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></IconWrapper>
+);
+const MenuIcon = ({ size }: { size?: number }) => (
+  <IconWrapper size={size}><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></IconWrapper>
+);
+const ChevronRight = ({ size, color }: { size?: number, color?: string }) => (
+  <IconWrapper size={size} color={color}><polyline points="9 18 15 12 9 6"/></IconWrapper>
+);
+const Skull = ({ size, color }: { size?: number, color?: string }) => (
+  <IconWrapper size={size} color={color}><path d="M12 2c-3.87 0-7 3.13-7 7 0 2.25 1.07 4.25 2.74 5.57.85 1.57.9 3.25.9 4.43h6.72c0-1.18.05-2.86.9-4.43A7.002 7.002 0 0 0 19 9c0-3.87-3.13-7-7-7z"/><path d="M15 14a2 2 0 1 0-2 2"/></IconWrapper>
+);
+
+// --- Main App Component ---
 function App() {
   const [gameState, setGameState] = useState<GameState>('menu');
   const [score, setScore] = useState(0);
