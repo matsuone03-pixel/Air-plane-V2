@@ -1,4 +1,7 @@
 
+// Export a constant to ensure this module has runtime content
+export const TYPES_VERSION = '1.0.0';
+
 export type GameState = 'menu' | 'playing' | 'gameover';
 
 export type DifficultyLevel = 'EASY' | 'NORMAL' | 'HARD' | 'IMPOSSIBLE';

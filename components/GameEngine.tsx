@@ -1,6 +1,8 @@
+
 import React, { useEffect, useRef } from 'react';
-import { Bullet, Enemy, Particle, Player, DifficultyLevel } from '../types';
-import { DIFFICULTIES, COLORS, PLAYER_SIZE, PLAYER_HIT_SIZE } from '../constants';
+// IMPORTANT: File extensions required for browser environment
+import type { Bullet, Enemy, Particle, Player, DifficultyLevel, GameObject } from '../types.ts';
+import { DIFFICULTIES, COLORS, PLAYER_SIZE, PLAYER_HIT_SIZE } from '../constants.ts';
 
 interface GameEngineProps {
   gameState: 'menu' | 'playing' | 'gameover';
@@ -440,7 +442,5 @@ const GameEngine: React.FC<GameEngineProps> = ({ gameState, difficulty, onGameOv
 
   return <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%', background: '#fff' }} />;
 };
-
-interface GameObject { x: number, y: number }
 
 export default GameEngine;

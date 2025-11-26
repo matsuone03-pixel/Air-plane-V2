@@ -1,5 +1,5 @@
 
-import { DifficultyConfig, DifficultyLevel } from "./types";
+import type { DifficultyConfig, DifficultyLevel } from "./types.ts";
 
 export const DIFFICULTIES: Record<DifficultyLevel, DifficultyConfig> = {
   EASY: {
@@ -15,7 +15,7 @@ export const DIFFICULTIES: Record<DifficultyLevel, DifficultyConfig> = {
     spawnRateBase: 65,
     bulletSpeedMult: 0.9,
     enemyHpMult: 1.0, // Unified HP
-    scoreMultiplier: 1.0,
+    scoreMultiplier: 0.75,
     playerShotInterval: 10, // Increased speed (was 12)
   },
   HARD: {
@@ -23,7 +23,7 @@ export const DIFFICULTIES: Record<DifficultyLevel, DifficultyConfig> = {
     spawnRateBase: 50,
     bulletSpeedMult: 1.2,
     enemyHpMult: 1.0, // Unified HP
-    scoreMultiplier: 2.0,
+    scoreMultiplier: 0.9,
     playerShotInterval: 8, // Adjusted to be faster than Normal
   },
   IMPOSSIBLE: {
@@ -31,7 +31,7 @@ export const DIFFICULTIES: Record<DifficultyLevel, DifficultyConfig> = {
     spawnRateBase: 40,
     bulletSpeedMult: 1.4,
     enemyHpMult: 1.0, // Unified HP
-    scoreMultiplier: 5.0,
+    scoreMultiplier: 1.0,
     playerShotInterval: 6, // Fastest
   }
 };

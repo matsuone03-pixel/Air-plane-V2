@@ -1,7 +1,9 @@
+
 import React, { useState, useCallback } from 'react';
-import GameEngine from './components/GameEngine';
-import { DifficultyLevel, GameState } from './types';
-import { DIFFICULTIES } from './constants';
+// IMPORTANT: File extensions required for browser environment
+import GameEngine from './components/GameEngine.tsx';
+import type { DifficultyLevel, GameState } from './types.ts';
+import { DIFFICULTIES } from './constants.ts';
 
 // --- Inline SVG Icons (Replacing lucide-react for stability) ---
 const IconWrapper: React.FC<{ children: React.ReactNode, size?: number, color?: string }> = ({ children, size = 24, color = 'currentColor' }) => (
