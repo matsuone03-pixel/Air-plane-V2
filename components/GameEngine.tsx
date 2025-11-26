@@ -11,7 +11,7 @@ interface GameEngineProps {
 
 const GameEngine: React.FC<GameEngineProps> = ({ gameState, difficulty, onGameOver, onScoreUpdate }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const requestRef = useRef<number>(0);
+  const requestRef = useRef<number | null>(null);
   
   // Game State Refs (Mutable to avoid re-renders)
   const scoreRef = useRef(0);
@@ -426,7 +426,7 @@ const GameEngine: React.FC<GameEngineProps> = ({ gameState, difficulty, onGameOv
         canvas.removeEventListener('mousemove', onMouseMove);
         canvas.removeEventListener('touchmove', onTouchMove);
         canvas.removeEventListener('touchstart', onTouchStart);
-        if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        if (requestRef.current !== null) cancelAnimationFrame(requestRef.current);
     };
   }, [gameState, difficulty, onGameOver, onScoreUpdate]);
 
